@@ -1,10 +1,12 @@
-from flask import Blueprint, render_template, request, session, flash
+from flask import Blueprint, render_template, request, session, flash, redirect, session, url_for
 from flask import redirect, url_for
 
 from miltontours.db import add_order, get_orders, check_for_user
 from miltontours.db import get_cities, get_city, get_tours_for_city
 from miltontours.session import get_basket, add_to_basket, empty_basket, convert_basket_to_order
-from miltontours.forms import CheckoutForm, LoginForm
+from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 bp = Blueprint('main', __name__)
 
@@ -58,9 +60,11 @@ def remove_basketitem(item_id):
     return redirect(url_for('main.order'))
 
 
+
+# This is to checkout the order with updated information
 @bp.route('/checkout/', methods = ['POST', 'GET'])
 def checkout():
-    form = CheckoutForm() 
+    form = NewCheckoutForm() 
     if request.method == 'POST':
         
         #retrieve correct order object
@@ -72,6 +76,13 @@ def checkout():
             order.surname = form.surname.data
             order.email = form.email.data
             order.phone = form.phone.data
+            order.address = form.address.data
+            order.city = form.city.data
+            order.postcode = form.postcode.data
+            order.state = form.state.data
+            order.delivery = form.delivery.data
+            order.payment = form.payment.data
+
             flash('Thank you for your information, your order is being processed!',)
             order = convert_basket_to_order(get_basket())
             empty_basket()
@@ -107,3 +118,36 @@ def login():
             return redirect(url_for('main.index'))
 
     return render_template('login.html', form = form)
+
+
+
+
+# For registering a new user and logging out, we will use the RegisterForm class
+#Keeping it commented out for now, as we are not using it yet
+
+
+# # This is to logout the user
+# @bp.route('/logout')
+# def logout():
+#     session.clear()
+#     flash('Logged out.')
+#     return redirect(url_for('auth.login'))
+
+
+# # This is to register a new user
+# bp.route('/register', methods=['GET', 'POST'])
+# def register():
+#     form = RegisterForm()
+#     if form.validate_on_submit():
+#         username = form.username.data
+#         email = form.email.data
+#         password = generate_password_hash(form.password.data)
+
+#         cursor = mysql.connection.cursor()
+#         cursor.execute("INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)",
+#                        (username, email, password))
+#         mysql.connection.commit()
+#         cursor.close()
+#         flash('Registration successful! Please login.')
+#         return redirect(url_for('auth.login'))
+#     return render_template('register.html', form=form)
