@@ -6,13 +6,13 @@ from datetime import datetime
 DummyCity = City('0', 'Dummy', 'Dummy city for testing', 'dummy.jpg')
 
 Cities = [
-    City('1', 'Sydney', 
+    City('1', 'Panadol', 
         'City in New South Wales with largest population', 
         'sydney.jpg'),
-    City('2', 'Brisbane', 
+    City('2', 'Multivitamins', 
         'City in Queensland with a good weather', 
         'brisbane.jpg'),
-    City('3', 'Melbourne',
+    City('3', 'Ibuprofen',
         'Visit a city in Melbourne and experience all four seasons in a day!',
         'melbourne.jpg')
 ]
