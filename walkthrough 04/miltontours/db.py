@@ -103,6 +103,7 @@ def get_order(order_id):
             return order
     return None  # or raise an exception if preferred
 
+#can be reused, needs hashing function for actual implementation
 def check_for_user(username, password):
     """Check if the username and password are valid."""
     for user in Users:
