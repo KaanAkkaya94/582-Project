@@ -1,7 +1,8 @@
 
-from miltontours.models import City, Tour, Order, OrderStatus, UserInfo
+from miltontours.models import Item, Order, OrderStatus, UserInfo
 from miltontours.models import UserAccount
 from datetime import datetime
+from . import mysql
 
 DummyCity = City('0', 'Dummy', 'Dummy city for testing', 'dummy.jpg')
 
@@ -50,17 +51,20 @@ Users = [
     ),
 ]
 
-def get_cities():
-    """Get all cities."""
-    return Cities
+#function to get all items from the db
+def get_items():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice FROM items")
+    results = cur.fetchall()
+    cur.close()
+    return [Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice']) for row in results]
 
-def get_city(city_id):
-    """Get a city by its ID."""
-    city_id = str(city_id)
-    for city in Cities:
-        if city.id == city_id:
-            return city
-    return DummyCity
+def get_item(itemID):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice FROM items WHERE itemID = %s", (itemID))
+    row = cur.fetchone()
+    cur.close()
+    return Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice']) if row else None
 
 def get_tours():
     """Get all tours."""
@@ -78,6 +82,18 @@ def get_tours_for_city(city_id):
     """Get all tours for a given city ID."""
     city_id = str(city_id)
     return [tour for tour in Tours if tour.city.id == city_id]
+
+#function to add item to the basket of the user
+def add_to_basket(itemID, quantity = 1):
+    basket = get_basket()
+    basket.add_item(BasketItem(item=get_item(itemID), quantity=quantity))
+    _save_basket_to_session(basket)
+
+#fucntion to remove item from the basket of the user
+def remove_from_basket(itemID, quantitiy=1):
+    basket = get_basket()
+    basket.remove_item(basket_item_id)
+    _save_basket_to_session(basket)
 
 def add_city(city):
     """Add a new city."""

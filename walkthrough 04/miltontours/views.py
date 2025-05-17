@@ -7,10 +7,10 @@ from miltontours.session import get_basket, add_to_basket, empty_basket, convert
 from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
+#groups all names under the namespace
 bp = Blueprint('main', __name__)
 
-
+#if homepages get visited, gets all cities
 @bp.route('/')
 def index():
     return render_template('index.html', cities = get_cities())

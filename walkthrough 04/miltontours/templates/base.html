@@ -17,42 +17,42 @@
 
 <body>
     <header>
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
-              <div class="container-fluid">
-                <a class="btn btn-fastmeds" href="index.html" role="button">Fast Meds <i class="bi bi-capsule-pill"></i></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                  <div class="mx-auto d-flex">
-                    <form class="d-flex">
-                      <!--Search bar-->
-                      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                      <!--Split search and filter button-->
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-outline-dark" type="submit">Filter</button>
-                        <button type="button" class="btn btn-outline-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                          <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="#">Analgesics</a></li>
-                          <li><a class="dropdown-item" href="#">Antibacterials</a></li>
-                          <li><a class="dropdown-item" href="#">Antibiotics</a></li>
-                          <li><a class="dropdown-item" href="#">Cough Suppressants</a></li>
-                          <li><a class="dropdown-item" href="#">Hormones</a></li>
-                          <li><a class="dropdown-item" href="#">Laxatives</a></li>
-                          <li><a class="dropdown-item" href="#">Sedatives</a></li>
-                          <li><a class="dropdown-item" href="#">Sleeping Drugs</a></li>
-                          <li><a class="dropdown-item" href="#">Vitamins</a></li>
-                        </ul>
-                      </div>
-                    </form>
-                  </div>
-                  <!--Basket button which redirects to basket.html website-->
-                  <a class="btn btn-basket" href="delivery_request.html" role="button"><i class="bi bi-cart3"></i>Basket</a>
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="btn btn-fastmeds" href="index.html" role="button">Fast Meds <i class="bi bi-capsule-pill"></i></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="mx-auto d-flex">
+              <form class="d-flex">
+                <!--Search bar-->
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <!--Split search and filter button-->
+                <div class="btn-group">
+                  <button type="button" class="btn btn-outline-dark" type="submit">Filter</button>
+                  <button type="button" class="btn btn-outline-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Analgesics</a></li>
+                    <li><a class="dropdown-item" href="#">Antibacterials</a></li>
+                    <li><a class="dropdown-item" href="#">Antibiotics</a></li>
+                    <li><a class="dropdown-item" href="#">Cough Suppressants</a></li>
+                    <li><a class="dropdown-item" href="#">Hormones</a></li>
+                    <li><a class="dropdown-item" href="#">Laxatives</a></li>
+                    <li><a class="dropdown-item" href="#">Sedatives</a></li>
+                    <li><a class="dropdown-item" href="#">Sleeping Drugs</a></li>
+                    <li><a class="dropdown-item" href="#">Vitamins</a></li>
+                  </ul>
                 </div>
-              </div>
-            </nav>
+              </form>
+            </div>
+            <!--Basket button which redirects to basket.html website-->
+            <a class="btn btn-basket" href="delivery_request.html" role="button"><i class="bi bi-cart3"></i>Basket</a>
+          </div>
+        </div>
+      </nav>
           
 
         {% with messages = get_flashed_messages(category_filter='message') %}
