@@ -30,6 +30,8 @@ create table items(\
 	itemID int auto_increment not null primary key,\
     itemName varchar(50) not null,\
     itemDescription varchar(250) not null,\
+    itemPrice float not null,\
+    itemPicture varchar (255),\
     itemCategory int,\
     foreign key (itemCategory) references categories(categoryID)\
 );\
