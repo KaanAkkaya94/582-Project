@@ -54,17 +54,17 @@ Users = [
 #function to get all items from the db
 def get_items():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice FROM items")
+    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM items")
     results = cur.fetchall()
     cur.close()
-    return [Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice']) for row in results]
+    return [Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice'], row['itemPicture']) for row in results]
 
 def get_item(itemID):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice FROM items WHERE itemID = %s", (itemID))
+    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM items WHERE itemID = %s", (itemID))
     row = cur.fetchone()
     cur.close()
-    return Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice']) if row else None
+    return Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice'], row['itemPicture']) if row else None
 
 
 #Function to get all categories from the db
