@@ -1,5 +1,5 @@
 
-from miltontours.models import Item, Order, OrderStatus, UserInfo
+from miltontours.models import Item, Category, Order, OrderStatus, UserInfo
 from miltontours.models import UserAccount
 from datetime import datetime
 from . import mysql
@@ -65,6 +65,32 @@ def get_item(itemID):
     row = cur.fetchone()
     cur.close()
     return Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice']) if row else None
+
+
+#Function to get all categories from the db
+def get_categories():
+    """Get all categories."""
+    cur = mysql.connection.cursor()
+    cur.execute("""SELECT categoryID, categoryName FROM categories
+                   JOIN items ON categories.categoryID = items.itemCategory
+                   """)
+    results = cur.fetchall()
+    cur.close()
+    return [Category(str(row['categoryID']), row['categoryName'],
+                    [Item(str(row['itemID']), row['itemName'], row['itemDescription'],
+                           row['itemCategory'], row['itemPrice'])]) for row in results]
+
+#Function to get all categories from the db
+def get_category(categoryID):
+    """Get a category by its specific ID."""
+    cur = mysql.connection.cursor()
+    cur.execute("""SELECT categoryID, categoryName FROM categories 
+                    JOIN items ON categories.categoryID = items.itemCategory
+                    WHERE categories.categoryID = %s
+                """, (categoryID))
+    row = cur.fetchone()
+    cur.close()
+    return Category(str(row['categoryID']), row['categoryName']) if row else None
 
 def get_tours():
     """Get all tours."""
