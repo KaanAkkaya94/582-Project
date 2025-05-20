@@ -26,7 +26,7 @@ insert into categories (categoryName) values\
 ('Vitamins');\
 \
 \
-create table items(\
+create table cities(\
 	itemID int auto_increment not null primary key,\
     itemName varchar(50) not null,\
     itemDescription varchar(250) not null,\
@@ -36,7 +36,7 @@ create table items(\
     foreign key (itemCategory) references categories(categoryID)\
 );\
 \
-insert into items (itemName, itemDescription, itemCategory) values\
+insert into cities (itemName, itemDescription, itemCategory) values\
 # Analgesics\
 ('Paramol 500mg', 'Generic description for medicine.', 1),\
 ('Irofen 200mg', 'Generic description for medicine.', 1),\

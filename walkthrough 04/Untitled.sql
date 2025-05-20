@@ -1,0 +1,117 @@
+DROP database Fastmeds;
+create database Fastmeds;
+use Fastmeds;
+
+create table categories(
+	categoryID int auto_increment primary key, 
+    categoryName varchar(20) not null unique
+);
+
+insert into categories (categoryName) values
+('Analgesics'),
+('Antibacterials'),
+('Antibiotics'),
+('Cough Supressants'),
+('Hormones'),
+('Laxatives'),
+('Sedatives'),
+('Sleeping Drugs'),
+('Vitamins');
+
+
+create table cities(
+	itemID int auto_increment not null primary key,
+    itemName varchar(50) not null,
+    itemDescription varchar(250) not null,
+    itemCategory int,
+    itemPrice float,
+    itemPicture varchar (255),
+    foreign key (itemCategory) references categories(categoryID)
+);
+
+insert into cities (itemName, itemDescription, itemCategory) values
+# Analgesics
+('Paramol 500mg', 'Generic description for medicine.', 1),
+('Irofen 200mg', 'Generic description for medicine.', 1),
+# Antibacterials
+('Pemacillin 100mg', 'Generic description for medicine.', 2),
+('Pernocyillin 50mg', 'Generic description for medicine.', 2),
+# Antibiotics
+('Axillin', 'Generic description for medicine.', 3),
+('Azromycin 250mg', 'Generic description for medicine.', 3),
+# Cough Suppressants
+('Dexthorphan Syrup', 'Generic description for medicine.', 4),
+('Benaryl Cough Liquid', 'Generic description for medicine.', 4),
+# Hormones
+('Traxine 100mcg', 'Generic description for medicine.', 5),
+('Meraxine 200mcg', 'Generic description for medicine.', 5),
+# Laxatives
+('Ena Laxative Tablets', 'Generic description for medicine.', 6),
+('Latulose Solution', 'Generic description for medicine.', 6),
+# Sedatives
+('Dizepam 5mg', 'Generic description for medicine.', 7),
+('Limozepam 1mg', 'Generic description for medicine.', 7),
+# Sleeping Drugs
+('Metonin 3mg', 'Generic description for medicine.', 8),
+('Zolone 7.5mg', 'Generic description for medicine.', 8),
+# Vitamins
+('Vitamin C 1000mg', 'Generic description for medicine.', 9),
+('Multivitamin Daily', 'Generic description for medicine.', 9);
+
+
+
+
+select i.itemName as item, c.categoryName as categories
+from items i
+join categories c on i.itemCategory = c.categoryID
+order by c.categoryName;
+
+
+create table paymentOptions(
+	paymentID int auto_increment primary key, 
+    PaymentOption varchar(20) not null unique
+);
+create table deliveryOptions(
+	deliveryID int auto_increment primary key, 
+    deliveryOption varchar(25) not null unique
+);
+
+
+create table basket(
+		basketID int auto_increment not null primary key,
+        userID int,
+        paymentOptionID int not null,
+        deliveryOptionID int not null,
+        createdAt timestamp default current_timestamp,
+        basketPrice float not null,
+        foreign key (paymentOptionID) references paymentOptions (paymentID),
+        foreign key (deliveryOptionID) references deliveryOptions (deliveryID)
+);
+
+create table users(
+	userID int auto_increment not null primary key,
+    basketID int,
+    userFirstName varchar(20) not null,
+    userLastName varchar(20) not null,
+    userEmail varchar(50) not null,
+    userPhoneNumber varchar(20) not null,
+    userAdress varchar(50) not null,
+    userState varchar(10) not null,
+    userPostcode int not null,
+    foreign key (basketID) references basket(basketID)
+);
+
+
+#changed basket(paymentOption) to paymentOptions(paymentoption)
+insert into  paymentOptions (paymentOption) values
+('Credit Card'),
+('Bank Transfer'),
+('Paypal'),
+('Wise');
+
+
+insert into deliveryOptions (deliveryOption) values
+('Normal Delivery'),
+('Express Delivery'),
+('Eco-Friendly Delivery'),
+('Store Pick-Up');

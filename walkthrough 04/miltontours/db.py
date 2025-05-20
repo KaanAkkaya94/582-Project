@@ -54,14 +54,14 @@ Users = [
 #function to get all items from the db
 def get_cities():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM items")
+    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM cities")
     results = cur.fetchall()
     cur.close()
     return [Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice'], row['itemPicture']) for row in results]
 
 def get_city(itemID):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM items WHERE itemID = %s", (itemID))
+    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM cities WHERE itemID = %s", (itemID))
     row = cur.fetchone()
     cur.close()
     return Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice'], row['itemPicture']) if row else None

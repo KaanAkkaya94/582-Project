@@ -14,9 +14,9 @@ def create_app():
     app.debug = True
     app.secret_key = 'BetterSecretNeeded123'
     app.config['MYSQL_USER'] = 'root'
-    app.config['MYSQL_PASSWORD'] = 'st3v3n21021999'
+    app.config['MYSQL_PASSWORD'] = '1Password'
     app.config['MYSQL_DB'] = 'Fastmeds'
-    app.config['MYSQL_HOST'] = '127.0.0.1:3306'
+    app.config['MYSQL_HOST'] = 'localhost'
     app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
     mysql.init_app(app)
@@ -28,7 +28,7 @@ def create_app():
     from . import views
     app.register_blueprint(views.bp)
 
-    @app.before_request
+    #@app.before_request
 
 
     @app.errorhandler(404) 
