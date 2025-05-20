@@ -92,22 +92,46 @@ def get_category(categoryID):
     cur.close()
     return Category(str(row['categoryID']), row['categoryName']) if row else None
 
-def get_tours():
-    """Get all tours."""
-    return Tours
+def get_items_for_category(categoryID):
+    """Get all items for a given category ID."""
+    cur = mysql.connection.cursor()
+    cur.executef("""SELECT i.itemID, i.itemName, i.itemDescription, i.itemCategory, i.itemPrice, i.itemPicture
+                    FROM items i
+                    JOIN categories c ON i.categoryID = c.categoryID
+                    WHERE c.categoryID = %s""", (categoryID))
+    results = cur.fetchall()
+    cur.close()
+    return [
+            Item(str(row['itemID']), row['itemName'], row['itemDescription'],
+                 row['itemCategory'], row['itemPrice'],
+                 Category(str(row['categoryID']), row['categoryName']),
+                 row['itemPicture'], float(row['itemPrice'])) for row in results
+            ]
 
-def get_tour(tour_id):
-    """Get a tour by its ID."""
-    tour_id = str(tour_id)
-    for tour in Tours:
-        if tour.id == tour_id:
-            return tour
-    return DummyTour
 
-def get_tours_for_city(city_id):
-    """Get all tours for a given city ID."""
-    city_id = str(city_id)
-    return [tour for tour in Tours if tour.city.id == city_id]
+
+
+#Commented out as it is not used in the current implementation
+
+# def get_tours():
+#     """Get all tours."""
+#     return Tours
+
+# def get_tour(tour_id):
+#     """Get a tour by its ID."""
+#     tour_id = str(tour_id)
+#     for tour in Tours:
+#         if tour.id == tour_id:
+#             return tour
+#     return DummyTour
+
+# def get_tours_for_city(city_id):
+#     """Get all tours for a given city ID."""
+#     city_id = str(city_id)
+#     return [tour for tour in Tours if tour.city.id == city_id]
+
+
+
 
 #function to add item to the basket of the user
 def add_to_basket(itemID, quantity = 1):
