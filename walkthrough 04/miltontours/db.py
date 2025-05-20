@@ -138,6 +138,51 @@ def add_to_basket(itemID, quantity=1):
     cur.close() 
     
 
+
+#SQL connection to add item to the basket
+def add_item_to_basket(basket):
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO basket (itemID, quantity, basketPrice) VALUES (%s, %s, %s)", (basket.user.id, basket.total_cost))
+    basket_id = cur.lastrowid
+    for item in basket.items:
+        cur.execute("INSERT INTO basket_items (basketID, itemID, quantity) VALUES (%s, %s, %s)", (basket_id, item.id, item.quantity))
+    mysql.connection.commit()
+    cur.close()
+
+#Remove single item from the basket
+def remove_item_from_basket(basket, itemID):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM basket_items WHERE basketID = %s AND itemID = %s", (basket.user.id, itemID))
+    mysql.connection.commit()
+    cur.close()
+
+#Remove all items from the basket
+def remove_all_items_from_basket(basket):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM basket WHERE userID = %s", (basket.user.id))
+    mysql.connection.commit()
+    cur.close()
+
+
+#SQL query to add a new category to the database
+def add_city(category):
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO categories(categoryName) VALUES (%s)", (category.name))
+    mysql.connection.commit()
+    cur.close()
+
+#SQL query to add a new tour to the database
+def add_tour(item):
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO items(itemName, itemDescription, itemCategory, itemPrice, itemPicture) VALUES (%s, %s, %s, %s, %s)", (item.name, item.description, item.category.name, item.price, item.picture))
+    mysql.connection.commit()
+    cur.close()
+
+
+
+
+
+
 #function to add item to the basket of the user
 def add_to_basket(itemID, quantity = 1):
     basket = get_basket()
@@ -150,18 +195,33 @@ def remove_from_basket(itemID, quantitiy=1):
     basket.remove_item(basket_item_id)
     _save_basket_to_session(basket)
 
-#mine
-def add_city(city):
-    """Add a new city."""
-    Cities.append(city)
+
 #mine
 def add_tour(tour):
     """Add a new tour."""
     Tours.append(tour)
 
-def add_order(order):
-    """Add a new order."""
-    Orders.append(order)
+# SQL query to get the basket of the user
+def get_order(basketID):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT orderID, userID, basketPrice, userName, userEmail, userPhoneNumber FROM basket WHERE orderID = %s", (basketID))
+    row = cur.fetchone()
+    cur.close()
+    return Basket[str(row('basketID')), 
+                     UserInfo(str(row['userID']), row['userName'], row['userEmail'], row['userPhoneNumber']),
+                     float(row['basketPrice']) if row else None ]
+
+# SQL query to get all orders of the user
+def get_orders():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT orderID, userID, basketPrice, userName, userEmail, userPhoneNumber FROM basket")
+    row = cur.fetchall()
+    cur.close()
+    return Basket[str(row('basketID')), 
+                     UserInfo(str(row['userID']), row['userName'], row['userEmail'], row['userPhoneNumber']),
+                     float(row['basketPrice']) if row else None ]
+
+
 
 def get_orders():
     """Get all orders."""
@@ -175,12 +235,38 @@ def get_order(order_id):
             return order
     return None  # or raise an exception if preferred
 
-#can be reused, needs hashing function for actual implementation
+
 def check_for_user(username, password):
-    """Check if the username and password are valid."""
-    for user in Users:
-        # never store passwords in plain text in production code
-        # this is just for demonstration purposes
-        if user.username == username and user.password == password:
-            return user
-    return None  # or raise an exception if preferred
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT userID,userName, userPassword, userFirstName, userLastName, userEmail, userPhoneNumber, userAdress, userState, userPostcode,
+        FROM users
+        WHERE userName = %s AND user_password = %s
+    """, (username, password))
+    row = cur.fetchone()
+    cur.close()
+    if row:
+        return UserAccount(row['userName'], row['userPassword'], row['userEmail'],
+                           UserInfo(str(row['userID']), row['userFirstName'], row['userLastName'],
+                                    row['userEmail'], row['userPhoneNumber']))
+    return None
+
+def is_admin(userID):
+    """Check if a user is an admin."""
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM admins WHERE user_id = %s", (userID,))
+    row = cur.fetchone()
+    cur.close()
+    return True if row else False
+
+def add_user(form):
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        INSERT INTO users (userName, userPassword, userEmail, userFirstName, userLastName, userPhoneNumber, userAdress, userState, userPostcode)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (form.username.data, form.password.data, form.email.data,
+          form.firstname.data, form.surname.data, form.phone.data, form.address.data,
+          form.state.data, form.postcode.data))
+    mysql.connection.commit()
+    cur.close()
+

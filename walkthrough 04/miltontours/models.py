@@ -3,6 +3,8 @@ from datetime import datetime
 from typing import List
 from enum import Enum
 
+
+#KILL
 class OldCity:
     def __init__(self, id, name, description, image, price):
         self.id = id
@@ -23,6 +25,8 @@ class OldCity:
 # to create the class and its methods
 # this will create the __init__ and __repr__ methods for us
 # and we can add our own methods as needed
+
+#KILL
 @dataclass
 class City:
     id: str
@@ -32,7 +36,7 @@ class City:
     image: str = 'foobar.png'
     
 
-
+#KILL
 @dataclass
 class Tour:
     id: str
@@ -101,6 +105,9 @@ class BasketItem:
 
 @dataclass
 class Basket:
+    id: str
+    user: UserInfo
+    basketPrice: float = 0.0
     items: List[BasketItem] = field(
         default_factory=lambda: [])
 
@@ -148,3 +155,6 @@ class UserAccount:
     password: str
     email: str
     info: UserInfo
+
+
+    

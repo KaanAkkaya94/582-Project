@@ -4,7 +4,7 @@ from miltontours.models import UserInfo, Order, OrderStatus
 
 from flask import session
 
-DummyBasket = Basket()
+DummyBasket = Basket(id = None, user = DummyUserInfo)
 
 def get_user():
     return session.get('user', DummyUserInfo)
