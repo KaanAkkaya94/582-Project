@@ -145,10 +145,11 @@ def remove_from_basket(itemID, quantitiy=1):
     basket.remove_item(basket_item_id)
     _save_basket_to_session(basket)
 
+#mine
 def add_city(city):
     """Add a new city."""
     Cities.append(city)
-
+#mine
 def add_tour(tour):
     """Add a new tour."""
     Tours.append(tour)
