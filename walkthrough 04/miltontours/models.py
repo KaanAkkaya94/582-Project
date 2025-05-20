@@ -4,11 +4,12 @@ from typing import List
 from enum import Enum
 
 class OldCity:
-    def __init__(self, id, name, description, image):
+    def __init__(self, id, name, description, image, price):
         self.id = id
         self.name = name
         self.description = description
         self.image = image
+        self.price = price
 
     def get_city_details(self):
         return str(self)
@@ -27,7 +28,9 @@ class City:
     id: str
     name: str
     description: str = 'fooobar'
+    price = float
     image: str = 'foobar.png'
+    
 
 
 @dataclass

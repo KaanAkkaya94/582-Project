@@ -31,45 +31,46 @@ create table cities(\
     itemName varchar(50) not null,\
     itemDescription varchar(250) not null,\
     itemCategory int,\
-    itemPrice float not null,\
-    itemPicture varchar (255),\
+    itemPrice float,\
+    itemPicture varchar(255) not null default 'default.jpg',\
     foreign key (itemCategory) references categories(categoryID)\
 );\
 \
-insert into cities (itemName, itemDescription, itemCategory) values\
+insert into cities (itemName, itemDescription, itemCategory, itemPrice) values\
 # Analgesics\
-('Paramol 500mg', 'Generic description for medicine.', 1),\
-('Irofen 200mg', 'Generic description for medicine.', 1),\
+('Paramol 500mg', 'Generic description for medicine.', 1, 4.99),\
+('Irofen 200mg', 'Generic description for medicine.', 1, 4.99),\
 # Antibacterials\
-('Pemacillin 100mg', 'Generic description for medicine.', 2),\
-('Pernocyillin 50mg', 'Generic description for medicine.', 2),\
+('Pemacillin 100mg', 'Generic description for medicine.', 2, 4.99),\
+('Pernocyillin 50mg', 'Generic description for medicine.', 2, 4.99),\
 # Antibiotics\
-('Axillin', 'Generic description for medicine.', 3),\
-('Azromycin 250mg', 'Generic description for medicine.', 3),\
+('Axillin', 'Generic description for medicine.', 3, 4.99),\
+('Azromycin 250mg', 'Generic description for medicine.', 3, 4.99),\
 # Cough Suppressants\
-('Dexthorphan Syrup', 'Generic description for medicine.', 4),\
-('Benaryl Cough Liquid', 'Generic description for medicine.', 4),\
+('Dexthorphan Syrup', 'Generic description for medicine.', 4, 4.99),\
+('Benaryl Cough Liquid', 'Generic description for medicine.', 4, 4.99),\
 # Hormones\
-('Traxine 100mcg', 'Generic description for medicine.', 5),\
-('Meraxine 200mcg', 'Generic description for medicine.', 5),\
+('Traxine 100mcg', 'Generic description for medicine.', 5, 4.99),\
+('Meraxine 200mcg', 'Generic description for medicine.', 5, 4.99),\
 # Laxatives\
-('Ena Laxative Tablets', 'Generic description for medicine.', 6),\
-('Latulose Solution', 'Generic description for medicine.', 6),\
+('Ena Laxative Tablets', 'Generic description for medicine.', 6, 4.99),\
+('Latulose Solution', 'Generic description for medicine.', 6, 4.99),\
 # Sedatives\
-('Dizepam 5mg', 'Generic description for medicine.', 7),\
-('Limozepam 1mg', 'Generic description for medicine.', 7),\
+('Dizepam 5mg', 'Generic description for medicine.', 7, 4.99),\
+('Limozepam 1mg', 'Generic description for medicine.', 7, 4.99),\
 # Sleeping Drugs\
-('Metonin 3mg', 'Generic description for medicine.', 8),\
-('Zolone 7.5mg', 'Generic description for medicine.', 8),\
+('Metonin 3mg', 'Generic description for medicine.', 8, 4.99),\
+('Zolone 7.5mg', 'Generic description for medicine.', 8, 4.99),\
 # Vitamins\
-('Vitamin C 1000mg', 'Generic description for medicine.', 9),\
-('Multivitamin Daily', 'Generic description for medicine.', 9);\
+('Vitamin C 1000mg', 'Generic description for medicine.', 9, 4.99),\
+('Multivitamin Daily', 'Generic description for medicine.', 9, 4.99);\
 \
 \
 \
 \
-select i.itemName as item, c.categoryName as categories\
-from items i\
+\
+select i.itemName as city, c.categoryName as categories, i.itemDescription AS description, i.itemPrice AS price\
+from cities i\
 join categories c on i.itemCategory = c.categoryID\
 order by c.categoryName;\
 \
