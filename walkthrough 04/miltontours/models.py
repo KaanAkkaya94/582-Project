@@ -42,6 +42,28 @@ class Tour:
         default_factory=lambda: datetime.now()
     )
 
+@dataclass
+class Item:
+    def __init__(self, id, name, description, category, price, image):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.category = category
+        self.price = price
+        self.image = image
+
+@dataclass
+class Category:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+        
+
+    def __repr__(self):
+        str = "ID: {}, Name: {}, Description: {}, Category: {}, Price: {} \n" 
+        str = str.format( self.id, self.name, self.description, self.category, self.price)
+        return str
+
 class OrderStatus(Enum):
     PENDING = 'Pending'
     CONFIRMED = 'Confirmed'

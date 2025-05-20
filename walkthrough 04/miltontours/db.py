@@ -1,5 +1,5 @@
 
-from miltontours.models import Item, Category, Order, OrderStatus, UserInfo
+from miltontours.models import Item, Category, Order, OrderStatus, UserInfo, City, Tour
 from miltontours.models import UserAccount
 from datetime import datetime
 from . import mysql
@@ -52,14 +52,14 @@ Users = [
 ]
 
 #function to get all items from the db
-def get_items():
+def get_cities():
     cur = mysql.connection.cursor()
     cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM items")
     results = cur.fetchall()
     cur.close()
     return [Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice'], row['itemPicture']) for row in results]
 
-def get_item(itemID):
+def get_city(itemID):
     cur = mysql.connection.cursor()
     cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM items WHERE itemID = %s", (itemID))
     row = cur.fetchone()
@@ -113,25 +113,30 @@ def get_items_for_category(categoryID):
 
 #Commented out as it is not used in the current implementation
 
-# def get_tours():
-#     """Get all tours."""
-#     return Tours
+def get_tours():
+    """Get all tours."""
+    return Tours
 
-# def get_tour(tour_id):
-#     """Get a tour by its ID."""
-#     tour_id = str(tour_id)
-#     for tour in Tours:
-#         if tour.id == tour_id:
-#             return tour
-#     return DummyTour
+def get_tour(tour_id):
+    """Get a tour by its ID."""
+    tour_id = str(tour_id)
+    for tour in Tours:
+        if tour.id == tour_id:
+            return tour
+    return DummyTour
 
-# def get_tours_for_city(city_id):
-#     """Get all tours for a given city ID."""
-#     city_id = str(city_id)
-#     return [tour for tour in Tours if tour.city.id == city_id]
+def get_tours_for_city(city_id):
+    """Get all tours for a given city ID."""
+    city_id = str(city_id)
+    return [tour for tour in Tours if tour.city.id == city_id]
 
 
-
+def add_to_basket(itemID, quantity=1):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM items WHERE itemID = %s", (itemID))
+    row = cur.fetchone()
+    cur.close() 
+    
 
 #function to add item to the basket of the user
 def add_to_basket(itemID, quantity = 1):
