@@ -53,11 +53,13 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password", validators = [InputRequired()])
     submit = SubmitField("Login")
 
-
 class RegisterForm(FlaskForm):
-    username = StringField('Username', validators=[InputRequired()])
-    email = StringField('Email', validators=[email()])
-    password = PasswordField('Password', validators=[InputRequired()])
-    confirm = PasswordField('Confirm Password', validators=[EqualTo('password')])
-    submit = SubmitField('Register')
+    """Form for user registry."""
+    username = StringField("Username", validators = [InputRequired()])
+    password = PasswordField("Password", validators = [InputRequired()])
+    email = StringField("Email", validators = [InputRequired(), email()])
+    firstname = StringField("Your first name", validators = [InputRequired()])
+    surname = StringField("Your surname", validators = [InputRequired()])
+    phone = StringField("Your phone number", validators = [InputRequired()])
+    submit = SubmitField("Make Account")
 

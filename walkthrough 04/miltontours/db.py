@@ -175,12 +175,36 @@ def get_order(order_id):
             return order
     return None  # or raise an exception if preferred
 
-#can be reused, needs hashing function for actual implementation
+# #can be reused, needs hashing function for actual implementation
+# def check_for_user(username, password):
+#     """Check if the username and password are valid."""
+#     for user in Users:
+#         # never store passwords in plain text in production code
+#         # this is just for demonstration purposes
+#         if user.username == username and user.password == password:
+#             return user
+#     return None  # or raise an exception if preferred
 def check_for_user(username, password):
-    """Check if the username and password are valid."""
-    for user in Users:
-        # never store passwords in plain text in production code
-        # this is just for demonstration purposes
-        if user.username == username and user.password == password:
-            return user
-    return None  # or raise an exception if preferred
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT user_id, username, user_password, email, firstname, surname, phone
+        FROM users
+        WHERE username = %s AND user_password = %s
+    """, (username, password))
+    row = cur.fetchone()
+    cur.close()
+    if row:
+        return UserAccount(row['username'], row['user_password'], row['email'],
+                           UserInfo(str(row['user_id']), row['firstname'], row['surname'],
+                                    row['email'], row['phone']))
+    return None
+
+def add_user(form):
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        INSERT INTO users (username, user_password, email, firstname, surname, phone)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (form.username.data, form.password.data, form.email.data,
+          form.firstname.data, form.surname.data, form.phone.data))
+    mysql.connection.commit()
+    cur.close()

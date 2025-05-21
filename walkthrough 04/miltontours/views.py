@@ -6,6 +6,8 @@ from miltontours.db import get_cities, get_city, get_tours_for_city
 from miltontours.session import get_basket, add_to_basket, empty_basket, convert_basket_to_order
 from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm
 from werkzeug.security import generate_password_hash, check_password_hash
+from miltontours.db import add_user
+from hashlib import sha256
 
 #groups all names under the namespace
 bp = Blueprint('main', __name__)
@@ -96,28 +98,86 @@ def checkout():
     return render_template('checkout.html', form = form)
 
 
-@bp.route('/login/', methods = ['POST', 'GET'])
+
+
+
+# route for register and password encode
+@bp.route('/register/', methods=['POST', 'GET'])
+def register():
+    form = RegisterForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            form.password.data = sha256(form.password.data.encode()).hexdigest()
+            # Check if the user already exists
+            user = check_for_user(form.username.data, form.password.data)
+            if user:
+                flash('User already exists', 'error')
+                return redirect(url_for('main.register'))
+
+            add_user(form)
+            flash('Registration successful!')
+            return redirect(url_for('main.login'))
+
+    return render_template('register.html', form=form)
+
+# log in page route
+@bp.route('/login/', methods=['POST', 'GET'])
 def login():
     form = LoginForm()
+
     if request.method == 'POST':
-
         if form.validate_on_submit():
-
-            # Check if the user exists in the database
-            user = check_for_user(
-                form.username.data, form.password.data
-            )
+            form.password.data = sha256(form.password.data.encode()).hexdigest()
+            user = check_for_user(form.username.data, form.password.data)
             if not user:
                 flash('Invalid username or password', 'error')
                 return redirect(url_for('main.login'))
 
-            # Store user information in the session
-            session['username'] = user.username
+            # Store full user info in session
+            session['user'] = {
+                'user_id': user.info.id,
+                'firstname': user.info.firstname,
+                'surname': user.info.surname,
+                'email': user.info.email,
+                'phone': user.info.phone,
+                # 'is_admin': is_admin(user.info.id),
+            }
             session['logged_in'] = True
             flash('Login successful!')
             return redirect(url_for('main.index'))
 
-    return render_template('login.html', form = form)
+    return render_template('login.html', form=form)
+#  logout page
+@bp.route('/logout/')
+def logout():
+    session.pop('user', None)
+    session.pop('logged_in', None)
+    flash('You have been logged out.')
+    return redirect(url_for('main.index'))
+
+
+# @bp.route('/login/', methods = ['POST', 'GET'])
+# def login():
+#     form = LoginForm()
+#     if request.method == 'POST':
+
+#         if form.validate_on_submit():
+
+#             # Check if the user exists in the database
+#             user = check_for_user(
+#                 form.username.data, form.password.data
+#             )
+#             if not user:
+#                 flash('Invalid username or password', 'error')
+#                 return redirect(url_for('main.login'))
+
+#             # Store user information in the session
+#             session['username'] = user.username
+#             session['logged_in'] = True
+#             flash('Login successful!')
+#             return redirect(url_for('main.index'))
+
+#     return render_template('login.html', form = form)
 
 
 
