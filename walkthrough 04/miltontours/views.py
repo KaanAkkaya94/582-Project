@@ -1,16 +1,16 @@
 from flask import Blueprint, render_template, request, session, flash, redirect, session, url_for
 from flask import redirect, url_for
 
-from miltontours.db import add_order, get_orders, check_for_user
+from miltontours.db import get_orders, check_for_user
 from miltontours.db import get_cities, get_city, get_tours_for_city
 from miltontours.session import get_basket, add_to_basket, empty_basket, convert_basket_to_order
 from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
+#groups all names under the namespace
 bp = Blueprint('main', __name__)
 
-
+#if homepages get visited, gets all cities
 @bp.route('/')
 def index():
     return render_template('index.html', cities = get_cities())
@@ -86,7 +86,7 @@ def checkout():
             flash('Thank you for your information, your order is being processed!',)
             order = convert_basket_to_order(get_basket())
             empty_basket()
-            add_order(order)
+            # add_order(order)
             print('Number of orders in db: {}'.format(len(get_orders())))
             return redirect(url_for('main.index'))
         else:

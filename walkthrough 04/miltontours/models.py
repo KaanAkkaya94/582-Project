@@ -3,12 +3,15 @@ from datetime import datetime
 from typing import List
 from enum import Enum
 
+
+#KILL
 class OldCity:
-    def __init__(self, id, name, description, image):
+    def __init__(self, id, name, description, image, price):
         self.id = id
         self.name = name
         self.description = description
         self.image = image
+        self.price = price
 
     def get_city_details(self):
         return str(self)
@@ -22,14 +25,18 @@ class OldCity:
 # to create the class and its methods
 # this will create the __init__ and __repr__ methods for us
 # and we can add our own methods as needed
+
+#KILL
 @dataclass
 class City:
     id: str
     name: str
     description: str = 'fooobar'
+    price = float
     image: str = 'foobar.png'
+    
 
-
+#KILL
 @dataclass
 class Tour:
     id: str
@@ -41,6 +48,28 @@ class Tour:
     date: datetime = field(
         default_factory=lambda: datetime.now()
     )
+
+@dataclass
+class Item:
+    def __init__(self, id, name, description, category, price, image):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.category = category
+        self.price = price
+        self.image = image
+
+@dataclass
+class Category:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+        
+
+    def __repr__(self):
+        str = "ID: {}, Name: {}, Description: {}, Category: {}, Price: {} \n" 
+        str = str.format( self.id, self.name, self.description, self.category, self.price)
+        return str
 
 class OrderStatus(Enum):
     PENDING = 'Pending'
@@ -76,6 +105,9 @@ class BasketItem:
 
 @dataclass
 class Basket:
+    id: str
+    user: UserInfo
+    basketPrice: float = 0.0
     items: List[BasketItem] = field(
         default_factory=lambda: [])
 
@@ -123,3 +155,6 @@ class UserAccount:
     password: str
     email: str
     info: UserInfo
+
+
+    
