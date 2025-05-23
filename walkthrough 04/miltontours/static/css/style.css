@@ -19,6 +19,19 @@ html{
     margin-right: 15px;
 }
 
+.btn-outline-white {
+    border: 1px solid white;
+    color: white;
+}
+.btn:hover {
+    background-color: white;
+    color: black;
+}
+
+.btn {
+    color: white;
+}
+
 .add_button:hover {
     background-color: var(--alt-color);
     color: white;
