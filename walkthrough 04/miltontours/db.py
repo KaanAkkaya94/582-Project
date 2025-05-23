@@ -4,49 +4,13 @@ from miltontours.models import UserAccount
 from datetime import datetime
 from . import mysql
 
-DummyCity = City('0', 'Dummy', 'Dummy city for testing', 'dummy.jpg')
-
-Cities = [
-    City('1', 'Panadol', 
-        'City in New South Wales with largest population', 
-        'sydney.jpg'),
-    City('2', 'Multivitamins', 
-        'City in Queensland with a good weather', 
-        'brisbane.jpg'),
-    City('3', 'Ibuprofen',
-        'Visit a city in Melbourne and experience all four seasons in a day!',
-        'melbourne.jpg')
-]
-
-DummyTour = Tour('0', 'Dummy Tour', 'Dummy tour for testing',
-                 DummyCity, 'dummy.jpg', 25.25, datetime.now())
-
-Tours = [
-    Tour('1', 'Kangaroo point walk',
-         'Gentle stroll but be careful of cliffs. Hand feed the kangaroos',
-          Cities[1], 't_hand.jpg', 99.00, datetime(2023, 7, 23)),
-    Tour('2', 'West End markets',
-         'Tour the boutique goods and food and ride the wheel',
-         Cities[1], 't_ride.jpg', 20.00,  datetime(2023, 10, 30)),
-    Tour('3', 'Whale spotting',
-         'Visit the incredible Sydney coast line and see the whales migrating',
-         Cities[0], 't_whale.jpg', 129.00,  datetime(2023, 10, 30))
-]
-
 DummyUserInfo = UserInfo(
     '0', 'Dummy', 'Foobar', 'dummy@foobar.com', '1234567890'
 )
 
-Orders = [
-    Order('1', OrderStatus.PENDING, DummyUserInfo, 149.99,
-          []),  
-    Order('2', OrderStatus.CONFIRMED, DummyUserInfo, 1000.00,
-          []) 
-]
-
 Users = [
-    UserAccount('admin', 'admin', 'foobar@mail.com', 
-                UserInfo('1', 'Admin', 'User', 'foobar@mail.com', 
+    UserAccount('admin', 'admin', 'foobar@mail.com',
+                UserInfo('1', 'Admin', 'User', 'foobar@mail.com',
                          '1234567890')
     ),
 ]
@@ -54,40 +18,45 @@ Users = [
 #function to get all items from the db
 def get_cities():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM cities")
+    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice FROM cities")
     results = cur.fetchall()
     cur.close()
-    return [Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice'], row['itemPicture']) for row in results]
+    return [Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice']) for row in results]
 
-def get_city(itemID):
+# def get_product(itemID):
+#     cur = mysql.connection.cursor()
+#     cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM cities WHERE itemID = %s", (itemID,))
+#     row = cur.fetchone()
+#     cur.close()
+#     return Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice']) if row else None
+
+def get_product(itemID):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM cities WHERE itemID = %s", (itemID))
+    cur.execute("""
+        SELECT p.itemID, p.itemName, p.itemDescription, p.itemPrice, p.itemPicture,
+               c.categoryID, c.categoryName
+        FROM cities p
+        JOIN categories c ON p.itemCategory = c.categoryID
+        WHERE p.itemID = %s
+    """, (itemID,))
     row = cur.fetchone()
     cur.close()
-    return Item(str(row['itemID']), row['itemName'], row['itemDescription'], row['itemCategory'], row['itemPrice'], row['itemPicture']) if row else None
-
+    return Item(str(row['itemID']), row['itemName'], row['itemDescription'],
+                Category(str(row['categoryID']), row['categoryName']), float(row['itemPrice']) ) if row else None
 
 #Function to get all categories from the db
 def get_categories():
-    """Get all categories."""
     cur = mysql.connection.cursor()
-    cur.execute("""SELECT categoryID, categoryName FROM categories
-                   JOIN items ON categories.categoryID = items.itemCategory
-                   """)
+    cur.execute("SELECT categoryID, categoryName FROM categories")
     results = cur.fetchall()
     cur.close()
-    return [Category(str(row['categoryID']), row['categoryName'],
-                    [Item(str(row['itemID']), row['itemName'], row['itemDescription'],
-                           row['itemCategory'], row['itemPrice'])]) for row in results]
+    return [Category(str(row['categoryID']), row['categoryName']) for row in results]
 
-#Function to get all categories from the db
 def get_category(categoryID):
     """Get a category by its specific ID."""
     cur = mysql.connection.cursor()
     cur.execute("""SELECT categoryID, categoryName FROM categories 
-                    JOIN items ON categories.categoryID = items.itemCategory
-                    WHERE categories.categoryID = %s
-                """, (categoryID))
+                   WHERE categoryID = %s""", (categoryID,))
     row = cur.fetchone()
     cur.close()
     return Category(str(row['categoryID']), row['categoryName']) if row else None
@@ -95,19 +64,21 @@ def get_category(categoryID):
 def get_items_for_category(categoryID):
     """Get all items for a given category ID."""
     cur = mysql.connection.cursor()
-    cur.executef("""SELECT i.itemID, i.itemName, i.itemDescription, i.itemCategory, i.itemPrice, i.itemPicture
-                    FROM items i
-                    JOIN categories c ON i.categoryID = c.categoryID
-                    WHERE c.categoryID = %s""", (categoryID))
+    cur.execute("""SELECT i.itemID, i.itemName, i.itemDescription, i.itemCategory,
+                          i.itemPrice, i.itemPicture,
+                          c.categoryID, c.categoryName
+                   FROM cities i
+                   JOIN categories c ON i.itemCategory = c.categoryID
+                   WHERE c.categoryID = %s""", (categoryID,))
+
     results = cur.fetchall()
     cur.close()
-    return [
-            Item(str(row['itemID']), row['itemName'], row['itemDescription'],
-                 row['itemCategory'], row['itemPrice'],
-                 Category(str(row['categoryID']), row['categoryName']),
-                 row['itemPicture'], float(row['itemPrice'])) for row in results
-            ]
 
+    return [
+        Item(str(row['itemID']), row['itemName'], row['itemDescription'],
+             row['itemCategory'], row['itemPrice'])
+        for row in results
+    ]
 
 
 
@@ -135,8 +106,8 @@ def add_to_basket(itemID, quantity=1):
     cur = mysql.connection.cursor()
     cur.execute("SELECT itemID, itemName, itemDescription, itemCategory, itemPrice, itemPicture FROM items WHERE itemID = %s", (itemID))
     row = cur.fetchone()
-    cur.close() 
-    
+    cur.close()
+
 
 
 #SQL connection to add item to the basket
@@ -250,14 +221,6 @@ def check_for_user(username, password):
                            UserInfo(str(row['userID']), row['userFirstName'], row['userLastName'],
                                     row['userEmail'], row['userPhoneNumber']))
     return None
-
-def is_admin(userID):
-    """Check if a user is an admin."""
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM admins WHERE user_id = %s", (userID,))
-    row = cur.fetchone()
-    cur.close()
-    return True if row else False
 
 def add_user(form):
     cur = mysql.connection.cursor()
