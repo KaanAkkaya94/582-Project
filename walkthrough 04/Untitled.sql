@@ -92,6 +92,8 @@ create table basket(
 create table users(
 	userID int auto_increment not null primary key,
     basketID int,
+    userName varchar(50) unique not null,
+    userPassword varchar(255) not null,
     userFirstName varchar(20) not null,
     userLastName varchar(20) not null,
     userEmail varchar(50) not null,
