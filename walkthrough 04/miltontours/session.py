@@ -10,6 +10,8 @@ def get_user():
     if user_dict:
         return UserInfo(
             id=str(user_dict['user_id']),
+            username=user_dict['username'],
+            userpassword=user_dict['userpassword'],
             firstname=user_dict['firstname'],
             surname=user_dict['surname'],
             email=user_dict['email'],

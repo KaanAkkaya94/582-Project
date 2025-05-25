@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, session, flash, redirect, session, url_for
 from flask import redirect, url_for
 
+from hashlib import sha256
+
 from miltontours.db import get_orders, check_for_user
 
 from miltontours.db import get_categories, get_items_for_category, get_category
@@ -109,7 +111,7 @@ def login():
     if request.method == 'POST':
 
         if form.validate_on_submit():
-
+            form.password.data = sha256(form.password.data.encode()).hexdigest()
             # Check if the user exists in the database
             user = check_for_user(
                 form.username.data, form.password.data
@@ -118,8 +120,19 @@ def login():
                 flash('Invalid username or password', 'error')
                 return redirect(url_for('main.login'))
 
-            # Store user information in the session
-            session['username'] = user.username
+            #Store user information in the session
+            session['user'] = {                
+                'user_id': user.id,
+                'userName' : user.username,
+                'userPassword' : user.userpassword,
+                'firstname': user.firstname,
+                'surname': user.surname,
+                'phone': user.phone
+                # 'is_admin': is_admin(user.info.id),
+            }
+            #session['username']=user.username
+            #session['userpassword']=user.userpassword
+
             session['logged_in'] = True
             flash('Login successful!')
             return redirect(url_for('main.index'))

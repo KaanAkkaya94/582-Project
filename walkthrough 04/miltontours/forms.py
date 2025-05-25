@@ -56,8 +56,10 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired()])
-    email = StringField('Email', validators=[email()])
     password = PasswordField('Password', validators=[InputRequired()])
-    confirm = PasswordField('Confirm Password', validators=[EqualTo('password')])
+    email = StringField('Email', validators=[email()])
+    firstname = StringField("Your first name", validators = [InputRequired()])
+    surname = StringField("Your surname", validators = [InputRequired()])
+    phone = StringField("Your phone number", validators = [InputRequired()])
     submit = SubmitField('Register')
 

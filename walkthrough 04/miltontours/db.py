@@ -211,8 +211,7 @@ def check_for_user(username, password):
     cur = mysql.connection.cursor()
     cur.execute("""
         SELECT userID,userName, userPassword, userFirstName, userLastName, userEmail, userPhoneNumber, userAdress, userState, userPostcode,
-        FROM users
-        WHERE userName = %s AND user_password = %s
+        FROM users WHERE userName = %s AND userPassword = %s
     """, (username, password))
     row = cur.fetchone()
     cur.close()
