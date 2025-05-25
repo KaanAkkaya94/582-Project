@@ -111,7 +111,7 @@ def login():
     if request.method == 'POST':
 
         if form.validate_on_submit():
-            form.password.data = sha256(form.password.data.encode()).hexdigest()
+            #form.password.data = sha256(form.password.data.encode()).hexdigest()
             # Check if the user exists in the database
             user = check_for_user(
                 form.username.data, form.password.data

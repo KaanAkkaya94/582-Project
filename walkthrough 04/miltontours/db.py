@@ -210,7 +210,7 @@ def get_order(order_id):
 def check_for_user(username, password):
     cur = mysql.connection.cursor()
     cur.execute("""
-        SELECT userID,userName, userPassword, userFirstName, userLastName, userEmail, userPhoneNumber, userAdress, userState, userPostcode,
+        SELECT userID,userName, userPassword, userFirstName, userLastName, userEmail, userPhoneNumber, userAdress, userState, userPostcode
         FROM users WHERE userName = %s AND userPassword = %s
     """, (username, password))
     row = cur.fetchone()
@@ -220,6 +220,13 @@ def check_for_user(username, password):
                            UserInfo(str(row['userID']), row['userFirstName'], row['userLastName'],
                                     row['userEmail'], row['userPhoneNumber']))
     return None
+
+def is_admin(user_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM admins WHERE userID = %s", (user_id,))
+    row = cur.fetchone()
+    cur.close()
+    return True if row else False
 
 def add_user(form):
     cur = mysql.connection.cursor()
