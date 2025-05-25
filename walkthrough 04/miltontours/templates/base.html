@@ -32,7 +32,11 @@
                     </form>
                   </div>
                   <!--Basket button which redirects to basket.html website-->
-                  <a class="btn" href="{{ url_for('main.login') }}" role="button"><i class="bi bi-cart3"></i>Login</a>
+                    {% if session['username'] %}
+                    <a class="btn" href="{{ url_for('main.logout') }}" role="button"><i class="bi bi-cart3"></i>Logout</a>
+                    {% else %}
+                    <a class="btn" href="{{ url_for('main.login') }}" role="button"><i class="bi bi-cart3"></i>Login</a>
+                    {% endif %}
                   <a class="btn" href="{{ url_for('main.order') }}" role="button"><i class="bi bi-cart3"></i>Basket</a>
                 </div>
               </div>
