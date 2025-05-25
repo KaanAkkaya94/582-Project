@@ -140,34 +140,28 @@ def login():
     return render_template('login.html', form = form)
 
 
+@bp.route('/logout/')
+def logout():
+    session.pop('username', None)
+    session.pop('logged_in', None)
+    flash('You have been logged out.')
+    return redirect(url_for('main.index'))
 
 
-# For registering a new user and logging out, we will use the RegisterForm class
-#Keeping it commented out for now, as we are not using it yet
-
-
-# # This is to logout the user
-# @bp.route('/logout')
-# def logout():
-#     session.clear()
-#     flash('Logged out.')
-#     return redirect(url_for('auth.login'))
-
-
-# # This is to register a new user
-# bp.route('/register', methods=['GET', 'POST'])
-# def register():
-#     form = RegisterForm()
-#     if form.validate_on_submit():
-#         username = form.username.data
-#         email = form.email.data
-#         password = generate_password_hash(form.password.data)
-
-#         cursor = mysql.connection.cursor()
-#         cursor.execute("INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)",
-#                        (username, email, password))
-#         mysql.connection.commit()
-#         cursor.close()
-#         flash('Registration successful! Please login.')
-#         return redirect(url_for('auth.login'))
-#     return render_template('register.html', form=form)
+@bp.route('/manage/')
+# @only_admins
+def manage():
+    # check if the user is logged in and is an admin
+    if 'user' not in session or session['user']['user_id'] == 0:
+        flash('Please log in before managing orders.', 'error')
+        return redirect(url_for('main.login'))
+    if not session['user']['is_admin']:
+        flash('You do not have permission to manage orders.', 'error')
+        return redirect(url_for('main.index'))
+    # now we know the user is logged in and is an admin
+    # we can show the manage panel
+    cityform = AddCityForm()
+    tourform = AddTourForm()
+    # we need to populate the cities in the tourform
+    tourform.tour_city.choices = [(city.id, city.name) for city in get_cities()]
+    return render_template('manage.html', cityform=cityform, tourform=tourform)
