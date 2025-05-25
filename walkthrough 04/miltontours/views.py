@@ -121,16 +121,16 @@ def login():
                 return redirect(url_for('main.login'))
 
             #Store user information in the session
-            session['user'] = {                
-                'user_id': user.id,
-                'userName' : user.username,
-                'userPassword' : user.userpassword,
-                'firstname': user.firstname,
-                'surname': user.surname,
-                'phone': user.phone
-                # 'is_admin': is_admin(user.info.id),
-            }
-            #session['username']=user.username
+            # session['user'] = {                
+            #     'user_id': user.id,
+            #     'userName' : user.username,
+            #     'userPassword' : user.userpassword,
+            #     'firstname': user.firstname,
+            #     'surname': user.surname,
+            #     'phone': user.phone
+            #     # 'is_admin': is_admin(user.info.id),
+            # }
+            session['username']=user.username
             #session['userpassword']=user.userpassword
 
             session['logged_in'] = True
