@@ -37,6 +37,21 @@
                                 <p class="card-text">{{ product.description }}</p>
                             </div>
                         </div>
+                        <!-- Adding + and - buttons for quantity control -->
+                        <div class="row">
+                        <div class="col-12 text-center">
+                            <div class="fw-bold mb-1">Quantity</div>
+                            <div class="d-inline-flex align-items-center mb-3 justify-content-center">
+                                <form method="POST" action="{{ url_for('main.update_quantity', item_id=item.id, action='decrease') }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-secondary btn-sm">-</button>
+                                </form>
+                                <span class="mx-2">{{ item.quantity }}</span>
+                                <form method="POST" action="{{ url_for('main.update_quantity', item_id=item.id, action='increase') }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-secondary btn-sm">+</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                         <div class="float-end">
                             <form
                                     method="POST"
