@@ -3,6 +3,11 @@ html{
     --alt-color: rgb(153, 206, 160);
 }
 
+.brand:hover {
+    color: bisque;
+}
+
+
 .brand_color_set {
     background-color: var(--main-color);
     color: white;

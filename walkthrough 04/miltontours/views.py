@@ -5,7 +5,7 @@ from hashlib import sha256
 
 from miltontours.db import get_orders, check_for_user, add_user, user_already_exists
 
-from miltontours.db import get_categories, get_items_for_category, get_category
+from miltontours.db import get_categories, get_items_for_category, get_category, get_product
 
 from miltontours.session import get_basket, add_to_basket, remove_from_basket, empty_basket, convert_basket_to_order, _save_basket_to_session
 from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm
@@ -23,6 +23,11 @@ def index():
 def products(categoryid):
     products = get_items_for_category(categoryid)
     return render_template('products.html', products = products, category= get_category(categoryid))
+
+@bp.route('/product/<int:product_id>/')
+def product_details(product_id):
+    product = get_product(product_id)
+    return render_template('product_details.html', product=product)
 
 
 @bp.route('/order/', methods = ['POST', 'GET'])
