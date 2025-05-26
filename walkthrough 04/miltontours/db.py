@@ -229,13 +229,24 @@ def is_admin(user_id):
     return True if row else False
 
 def add_user(form):
-    cur = mysql.connection.cursor()
-    cur.execute("""
-        INSERT INTO users (userName, userPassword, userEmail, userFirstName, userLastName, userPhoneNumber, userAdress, userState, userPostcode)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    """, (form.username.data, form.password.data, form.email.data,
-          form.firstname.data, form.surname.data, form.phone.data, form.address.data,
-          form.state.data, form.postcode.data))
-    mysql.connection.commit()
-    cur.close()
+    try:    
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            INSERT INTO users (userName, userPassword, userEmail, userFirstName, userLastName, userPhoneNumber, userAdress, userState, userPostcode)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (form.username.data, form.password.data, form.email.data,
+            form.firstname.data, form.surname.data, form.phone.data, form.address.data,
+            form.state.data, form.postcode.data))
+        mysql.connection.commit()
+        cur.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
+def user_already_exists(username, useremail):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM users WHERE userName = %s OR userEmail = %s", (username, useremail))
+    row = cur.fetchone()
+    cur.close()
+    return True if row else False

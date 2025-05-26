@@ -89,6 +89,7 @@ create table basket(
         foreign key (deliveryOptionID) references deliveryOptions (deliveryID)
 );
 
+
 create table users(
 	userID int auto_increment not null primary key,
     basketID int,
@@ -96,13 +97,14 @@ create table users(
     userPassword varchar(255) not null,
     userFirstName varchar(20) not null,
     userLastName varchar(20) not null,
-    userEmail varchar(50) not null,
+    userEmail varchar(50) unique not null,
     userPhoneNumber varchar(20) not null,
     userAdress varchar(50) not null,
     userState varchar(10) not null,
     userPostcode int not null,
     foreign key (basketID) references basket(basketID)
 );
+
 
 
 #changed basket(paymentOption) to paymentOptions(paymentoption)

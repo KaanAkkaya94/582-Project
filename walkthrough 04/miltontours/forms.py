@@ -63,3 +63,33 @@ class RegisterForm(FlaskForm):
     phone = StringField("Your phone number", validators = [InputRequired()])
     submit = SubmitField('Register')
 
+class RegisterForm(FlaskForm):
+    """Form for user checkout."""
+    username = StringField('Username', validators=[InputRequired()])
+    password = PasswordField('Password', validators=[InputRequired()])
+    # confirm_password = PasswordField(
+    #     'Confirm Password',
+    #     validators=[InputRequired(), EqualTo('password', message='Passwords must be the same')]
+    # )
+    email = StringField("Your email", validators = [InputRequired(), email()])
+    firstname = StringField("Your first name", validators = [InputRequired()])
+    surname = StringField("Your surname", validators = [InputRequired()])
+    phone = StringField("Your phone number", validators = [InputRequired()])
+    address = StringField("Your address", validators = [InputRequired()])
+    city = StringField("Your city", validators = [InputRequired()])
+    postcode = StringField("Your postcode", validators = [InputRequired()])
+    state = SelectField(
+        "Your state",
+        choices=[
+            ("QLD", "Queensland"),
+            ("NSW", "New South Wales"),
+            ("VIC", "Victoria"),
+            ("TAS", "Tasmania"),
+            ("SA", "South Australia"),
+            ("WA", "Western Australia"),
+            ("NT", "Northern Territory"),
+            ("ACT", "Australian Capital Territory"),
+        ],
+        validators=[InputRequired()],
+    )
+    submit = SubmitField('Register')

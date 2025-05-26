@@ -3,11 +3,11 @@ from flask import redirect, url_for
 
 from hashlib import sha256
 
-from miltontours.db import get_orders, check_for_user
+from miltontours.db import get_orders, check_for_user, add_user, user_already_exists
 
 from miltontours.db import get_categories, get_items_for_category, get_category
 
-from miltontours.session import get_basket, add_to_basket, remove_from_basket, empty_basket, convert_basket_to_order
+from miltontours.session import get_basket, add_to_basket, remove_from_basket, empty_basket, convert_basket_to_order, _save_basket_to_session
 from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -105,6 +105,27 @@ def checkout():
     return render_template('checkout.html', form = form)
 
 
+#This is to register a new user and add it to the database
+@bp.route('/register/', methods = ['POST', 'GET'])
+def register():
+    form = RegisterForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+
+            if user_already_exists(form.username.data, form.email.data):
+                flash('User NAME or EMAIL already exists. Please choose a different user name or email.', 'error')
+                return redirect(url_for('main.register'))
+            # Hash the password
+            #hashed_password = generate_password_hash(form.password.data, method='sha256')
+            # Add user to the database
+            if add_user(form):
+                flash('Registration successful! You can now log in.', 'success')
+                return redirect(url_for('main.login'))
+            else:
+                flash('Registration failed. Please try again.', 'error')
+                return redirect(url_for('main.register'))
+    return render_template('register.html', form=form)
+
 @bp.route('/login/', methods = ['POST', 'GET'])
 def login():
     form = LoginForm()
@@ -155,3 +176,15 @@ def manage():
     # we need to populate the cities in the tourform
     tourform.tour_city.choices = [(city.id, city.name) for city in get_cities()]
     return render_template('manage.html', cityform=cityform, tourform=tourform)
+
+@bp.post('/basket/update_quantity/<string:item_id>/<string:action>/')
+def update_quantity(item_id, action):
+    basket = get_basket()
+    item = basket.get_item(item_id)
+    if item:
+        if action == 'increase':
+            item.quantity += 1
+        elif action == 'decrease' and item.quantity > 1:
+            item.quantity -= 1
+        _save_basket_to_session(basket)
+    return redirect(url_for('main.order'))

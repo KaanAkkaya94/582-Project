@@ -14,7 +14,7 @@ def create_app():
     app.debug = True
     app.secret_key = 'BetterSecretNeeded123'
     app.config['MYSQL_USER'] = 'root'
-    app.config['MYSQL_PASSWORD'] = 'st3v3n21021999'
+    app.config['MYSQL_PASSWORD'] = '1Password'
     app.config['MYSQL_DB'] = 'Fastmeds'
     app.config['MYSQL_HOST'] = 'localhost'
     app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
