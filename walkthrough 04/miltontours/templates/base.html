@@ -21,17 +21,21 @@
             <nav class="navbar navbar-expand-lg brand_color_set mb-20">
               <div class="container-fluid">
                 <a class="btn brand_color_set" href="/" role="button">Fast Meds <i class="bi bi-capsule-pill"></i></a>
+                <!--<a class="btn" href="{{ url_for('main.login') }}" role="button">About Us</a>-->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                   <div class="mx-auto d-flex">
                     <form class="d-flex">
-                      <!--Search bar-->
+                      <!--Search bar--> 
                       <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     </form>
                   </div>
                   <!--Basket button which redirects to basket.html website-->
+                    {% if session['user'] and session['user']['is_admin'] %}
+                    <a class="btn" href="{{ url_for('main.manage') }}" role="button"><i class="bi bi-cart3"></i>Manage</a>
+                    {% endif %}
                     {% if session['username'] %}
                     <a class="btn" href="{{ url_for('main.logout') }}" role="button"><i class="bi bi-cart3"></i>Logout</a>
                     {% else %}
