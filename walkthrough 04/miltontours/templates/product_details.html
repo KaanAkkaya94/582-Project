@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% import 'bootstrap5/form.html' as wtf %}
+
+{% block main %}
+      <!--Card for the datailed product-->
+        <div class="card mb-3">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <!--Carousel for 2 pictures of the item-->
+                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ url_for('static', filename='img/' + product.name.split(' ')[0] +'.jpg') }}" class="card-img-top" alt="card-img-top">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ url_for('static', filename='img/' + product.name.split(' ')[0] +'.jpg') }}" class="card-img-top" alt="card-img-top">
+                    </div>
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+              <!--Item details, including manufacturer, price, desription and id-->
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{ product.name }}</h5>
+                  <p class="card-text">{{ product.description}}</p>
+                  <p class="card-text"><small class="text-muted">Price: $ {{ product.price}}</small></p>
+                  <!--Buttons to place item in basket or buy direct-->
+                    <form method="POST"
+                          action="{{ url_for('main.adding_to_basket', product_id = product.id) }}">
+                        <input
+                                type="submit"
+                                value="+ Add to Basket"
+                                class="btn add_button brand_color_set">
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+{% endblock %}
