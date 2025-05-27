@@ -5,7 +5,7 @@ from hashlib import sha256
 
 from miltontours.db import get_orders, check_for_user, add_user, user_already_exists
 
-from miltontours.db import get_categories, get_items_for_category, get_category, get_product
+from miltontours.db import get_categories, get_items_for_category, get_category, get_product, search_items
 
 from miltontours.session import get_basket, add_to_basket, remove_from_basket, empty_basket, convert_basket_to_order, _save_basket_to_session, get_user
 from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm, orderCheckout
@@ -266,3 +266,13 @@ def update_quantity(item_id, action):
             item.quantity -= 1
         _save_basket_to_session(basket)
     return redirect(url_for('main.order'))
+
+@bp.route('/search')
+def search():
+    query = request.args.get('q', '')
+    results = []
+
+    if query:
+        results = search_items(query)
+
+    return render_template('search.html', query=query, results=results)

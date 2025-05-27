@@ -200,6 +200,29 @@ def get_orders():
     #                  UserInfo(str(row['userID'])), 
     #                  float(row['basketPrice']) if row else None ]
 
+def search_items(query):
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT i.itemID, i.itemName, i.itemDescription, i.itemCategory, i.itemPrice, i.itemPicture,
+               c.categoryID, c.categoryName
+        FROM cities i
+        JOIN categories c ON i.itemCategory = c.categoryID
+        WHERE i.itemName LIKE %s OR i.itemDescription LIKE %s
+    """, (query + '%', query + '%'))
+    rows = cur.fetchall()
+    cur.close()
+
+    return [
+        Item(
+            str(row['itemID']),
+            row['itemName'],
+            row['itemDescription'],
+            Category(str(row['categoryID']), row['categoryName']),
+            float(row['itemPrice'])
+        )
+        for row in rows
+    ]
+
 
 
 # def get_orders():
