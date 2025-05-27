@@ -27,11 +27,14 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                   <div class="mx-auto d-flex">
                     <form class="d-flex">
-                      <!--Search bar-->
+                      <!--Search bar--> 
                       <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     </form>
                   </div>
                   <!--Basket button which redirects to basket.html website-->
+                    {% if session['user'] and session['user']['is_admin'] %}
+                    <a class="btn" href="{{ url_for('main.manage') }}" role="button"><i class="bi bi-cart3"></i>Manage</a>
+                    {% endif %}
                     {% if session['username'] %}
                     <a class="btn btn-outline-light" href="{{ url_for('main.logout') }}" role="button" style="margin-right: 5px;"></i>Logout</a>
                     {% else %}
