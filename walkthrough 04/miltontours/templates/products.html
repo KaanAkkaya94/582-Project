@@ -2,7 +2,7 @@
 
 {% block head %}
 <!-- add a big banner to welcome user -->
-<div class="p-5 text-white bg-image" 
+<div class="p-5 text-white bg-image"
     style="background-image: url({{url_for('static', filename='img/pexels-etatics-inc-252430999-12512669.jpg')}}); background-size: cover;">
     <div class="text-white text-center py-5 px-4">
         <div>
@@ -23,7 +23,7 @@
         <div class="row justify-content-center" style="margin:10px;">
                         {% for product in products %}
                             <div class="col prod_card"><div class="card">
-                                    <a href="#">
+                                    <a href="{{ url_for('main.product_details', product_id=product.id) }}">
                                         <img src="{{ url_for('static', filename='img/' + product.name.split(' ')[0] +'.jpg') }}" class="card-img-top" alt="card-img-top">
                                     </a>
                                     <div class="card-body d-grid gap-2">
