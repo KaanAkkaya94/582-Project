@@ -1,6 +1,6 @@
 
 from miltontours.models import Item, Category, Order, OrderStatus, UserInfo, City, Tour
-from miltontours.models import UserAccount
+from miltontours.models import UserAccount, Basket
 from datetime import datetime
 from . import mysql
 
@@ -152,8 +152,8 @@ def add_tour(item):
 
 
 
-
-
+# from miltontours.models import Basket, BasketItem, get_item
+# from miltontours.session import get_basket, _save_basket_to_session
 #function to add item to the basket of the user
 def add_to_basket(itemID, quantity = 1):
     basket = get_basket()
@@ -175,36 +175,44 @@ def add_tour(tour):
 # SQL query to get the basket of the user
 def get_order(basketID):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT orderID, userID, basketPrice, userName, userEmail, userPhoneNumber FROM basket WHERE orderID = %s", (basketID))
+    cur.execute("SELECT basketID, userID, basketPrice FROM basket WHERE basketID = %s", (basketID))
     row = cur.fetchone()
     cur.close()
-    return Basket[str(row('basketID')), 
-                     UserInfo(str(row['userID']), row['userName'], row['userEmail'], row['userPhoneNumber']),
-                     float(row['basketPrice']) if row else None ]
+    if row:
+        # row[0] = basketID, row[1] = userID, row[2] = basketPrice
+        return Basket(str(row[0]), UserInfo(str(row[1])), float(row[2]))
+    return None
+    # return Basket[str(row['basketID']), 
+    #                  UserInfo(str(row['userID'])), 
+    #                  float(row['basketPrice']) if row else None ]
 
 # SQL query to get all orders of the user
 def get_orders():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT orderID, userID, basketPrice, userName, userEmail, userPhoneNumber FROM basket")
-    row = cur.fetchall()
+    cur.execute("SELECT basketID, userID, basketPrice FROM basket")
+    rows = cur.fetchall()
     cur.close()
-    return Basket[str(row('basketID')), 
-                     UserInfo(str(row['userID']), row['userName'], row['userEmail'], row['userPhoneNumber']),
-                     float(row['basketPrice']) if row else None ]
+    return [
+        Basket(str(row[0]), UserInfo(str(row[1])), float(row[2]))
+        for row in rows
+    ]
+    # return Basket[str(row['basketID']), 
+    #                  UserInfo(str(row['userID'])), 
+    #                  float(row['basketPrice']) if row else None ]
 
 
 
-def get_orders():
-    """Get all orders."""
-    return Orders
+# def get_orders():
+#     """Get all orders."""
+#     return Orders
 
-def get_order(order_id):
-    """Get an order by its ID."""
-    order_id = str(order_id)
-    for order in Orders:
-        if order.id == order_id:
-            return order
-    return None  # or raise an exception if preferred
+# def get_order(order_id):
+#     """Get an order by its ID."""
+#     order_id = str(order_id)
+#     for order in Orders:
+#         if order.id == order_id:
+#             return order
+#     return None  # or raise an exception if preferred
 
 
 def check_for_user(username, password):

@@ -96,6 +96,7 @@ class BasketItem:
 
 @dataclass
 class Basket:
+    userID: int
     items: List[BasketItem] = field(default_factory=lambda: [])
 
     def add_item(self, item: BasketItem):
