@@ -9,8 +9,8 @@ DummyUserInfo = UserInfo(
 )
 
 Users = [
-    UserAccount('admin', 'admin', 'foobar@mail.com',
-                UserInfo('1', 'Admin', 'User', 'foobar@mail.com',
+    UserAccount('admin', 'admin', 'admin@mail.com',
+                UserInfo('1', 'Admin', 'admin', 'admin@mail.com',
                          '1234567890')
     ),
 ]
@@ -134,23 +134,25 @@ def remove_all_items_from_basket(basket):
     mysql.connection.commit()
     cur.close()
 
-
-#SQL query to add a new category to the database
-def add_city(category):
+#written by Steven Baist 12334251
+#function to add a new item to the database (only for admins)
+def add_item(item):
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO categories(categoryName) VALUES (%s)", (category.name))
+    cur.execute("INSERT INTO cities (itemID, itemName, itemDescription, itemCategory, itemPrice) VALUES (%s, %s, %s, %s, %s)",
+                (item.id, item.name, item.description, item.category, item.price))
     mysql.connection.commit()
     cur.close()
 
-#SQL query to add a new tour to the database
-def add_tour(item):
+#written by Steven Baist 12334251
+#function to add a new category to the database (only for admins)
+def add_category(category):
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO items(itemName, itemDescription, itemCategory, itemPrice, itemPicture) VALUES (%s, %s, %s, %s, %s)", (item.name, item.description, item.category.name, item.price, item.picture))
+    cur.execute("""
+        INSERT INTO category (categoryID, categoryName)
+        VALUES (%s, %s)
+    """, (category.id, category.name))
     mysql.connection.commit()
     cur.close()
-
-
-
 
 
 
@@ -244,9 +246,9 @@ def check_for_user(username, password):
                                     row['userEmail'], row['userPhoneNumber']))
     return None
 
-def is_admin(user_id):
+def is_admin(adminID):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM admins WHERE userID = %s", (user_id,))
+    cur.execute("SELECT * FROM admins WHERE adminID = %s", (adminID,))
     row = cur.fetchone()
     cur.close()
     return True if row else False

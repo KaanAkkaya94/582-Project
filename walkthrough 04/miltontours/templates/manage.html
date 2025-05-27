@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% import 'bootstrap5/form.html' as wtf %}
+
+{% block head %}
+   <h1 class="display-5 text-center mt-3 mb-3">Manage Items</h1>
+   <p class="lead text-center">
+        These forms are for adding new items and categories to the database
+    </p>
+{% endblock %}
+
+{% block main %}
+    
+    <details class="mb-3 shadow-lg rounded">
+        <summary class="text-bg-danger ps-2 rounded">
+            <span class="lead">Add Category</span>
+        </summary>
+        <div class="row justify-content-center p-3">
+            <div class="col-md-6">
+                <p>
+                    Adds a new category to the database. 
+                    <br>
+                </p>
+                {{ wtf.render_form(cityform) }}
+            </div>
+        </div>
+    </details>
+
+    <details class="mb-3 shadow-lg rounded">
+        <summary class="text-bg-danger ps-2 rounded">
+            <span class="lead">Add Item</span>
+        </summary>
+        <div class="row justify-content-center p-3">
+            <div class="col-md-6">
+                <p>
+                    Adds a new item to an existing category in the database 
+                    <br>
+                </p>
+                {{ wtf.render_form(tourform) }}
+            </div>
+        </div>
+    </details>
+{% endblock %}

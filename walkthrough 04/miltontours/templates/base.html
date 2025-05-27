@@ -37,8 +37,8 @@
                       </form>
                   </div>
                   <!--Basket button which redirects to basket.html website-->
-                    {% if session['user'] and session['user']['is_admin'] %}
-                    <a class="btn" href="{{ url_for('main.manage') }}" role="button"><i class="bi bi-cart3"></i>Manage</a>
+                    {% if session['username'] and session['username']['is_admin'] %}
+                    <a class="btn btn-outline-light" href="{{ url_for('main.manage') }}" role="button" style="margin-right: 5px;"><i class="bi bi-cart3"></i>Manage</a>
                     {% endif %}
                     {% if session['username'] %}
                     <a class="btn btn-outline-light" href="{{ url_for('main.logout') }}" role="button" style="margin-right: 5px;"></i>Logout</a>

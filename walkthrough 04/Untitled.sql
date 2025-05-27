@@ -105,7 +105,10 @@ create table users(
     foreign key (basketID) references basket(basketID)
 );
 
-
+-- Users
+INSERT INTO users (userName, userPassword, userEmail, userFirstName, userLastName, userPhoneNumber, userAdress, userState, userPostcode)
+VALUES ('admin', 'admin', 'admin@mail.com', 'Admin', 'Admin', '1234567890', 'Admin Street', 'Queensland', '4000'
+);
 
 #changed basket(paymentOption) to paymentOptions(paymentoption)
 insert into  paymentOptions (paymentOption) values

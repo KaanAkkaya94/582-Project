@@ -8,7 +8,7 @@ from miltontours.db import get_orders, check_for_user, add_user, user_already_ex
 from miltontours.db import get_categories, get_items_for_category, get_category, get_product, search_items
 
 from miltontours.session import get_basket, add_to_basket, remove_from_basket, empty_basket, convert_basket_to_order, _save_basket_to_session
-from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm
+from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm, AddCategoryForm, AdditemForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
 #groups all names under the namespace
@@ -168,19 +168,54 @@ def logout():
 # @only_admins
 def manage():
     # check if the user is logged in and is an admin
-    if 'user' not in session or session['user']['user_id'] == 0:
+    if 'username' not in session or session['username']['userID'] == 0:
         flash('Please log in before managing orders.', 'error')
         return redirect(url_for('main.login'))
-    if not session['user']['is_admin']:
+    if not session['username']['is_admin']:
         flash('You do not have permission to manage orders.', 'error')
         return redirect(url_for('main.index'))
     # now we know the user is logged in and is an admin
     # we can show the manage panel
-    cityform = AddCityForm()
-    tourform = AddTourForm()
+    categoryform = AddCategoryForm()
+    itemform = AdditemForm()
+    # we need to populate the categories in the itemform
+    itemform.itemcategory.choices = [(category.id, category.name) for categories in get_categories()]
+    return render_template('manage.html', categoryform=categoryform, itemform=itemform)
+
+
+@bp.post('/manage/')
+def handle_manage():
+    categoryform = AddCategoryForm()
+    itemform = AdditemForm()
     # we need to populate the cities in the tourform
-    tourform.tour_city.choices = [(city.id, city.name) for city in get_cities()]
-    return render_template('manage.html', cityform=cityform, tourform=tourform)
+    # otherwise the form will not validate
+    itemform.tour_city.choices = [(city.id, city.name) for city in get_cities()]
+    try:
+        if itemform.validate_on_submit():
+            # Add the new category to the database
+            category = Category(
+                id= 0,
+                name=cityform.city_name.data,
+                image='brisbane.jpg'
+            )
+            addcategory(city)
+            flash('Category added successfully!')
+        elif itemform.validate_on_submit():
+            # Add the new item to the database
+            item = Item(
+                id=0,
+                name=itemform.tour_name.data,
+                description=itemform.tour_description.data,
+                category=get_city(tourform.tour_city.data),
+                price=float(itemform.tour_price.data),
+            )
+            add_item(item)
+            flash('Item added successfully!')
+        else:
+            flash('Failed to add item or category. Please check your input.')
+    except Exception as e:
+        flash(f'An error occurred: {e}', 'error')
+    return redirect(url_for('main.index'))
 
 @bp.post('/basket/update_quantity/<string:item_id>/<string:action>/')
 def update_quantity(item_id, action):

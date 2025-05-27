@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import SubmitField, StringField, PasswordField
+from wtforms.fields import SubmitField, StringField, PasswordField, DecimalField, RadioField
 from wtforms.validators import InputRequired, email, EqualTo
 from wtforms.fields import SelectField  # Add this import
 
@@ -93,3 +93,16 @@ class RegisterForm(FlaskForm):
         validators=[InputRequired()],
     )
     submit = SubmitField('Register')
+
+class AdditemForm(FlaskForm):
+    """Form for adding an Item."""
+    itemcategory = RadioField("Item", choices = [], validators = [InputRequired()])
+    itemname = StringField("Item Name", validators = [InputRequired()])
+    itemdescription = StringField("Description", validators = [InputRequired()])
+    itemprice = DecimalField("Price", validators = [InputRequired()])
+    item_submit = SubmitField("Add Item")
+
+class AddCategoryForm(FlaskForm):
+    """Form for adding a Category."""
+    categoryname = StringField("Category Name", validators = [InputRequired()])
+    city_submit = SubmitField("Add Category")
