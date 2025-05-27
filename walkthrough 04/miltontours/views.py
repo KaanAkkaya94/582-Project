@@ -19,7 +19,7 @@ bp = Blueprint('main', __name__)
 def index():
     return render_template('index.html', categories = get_categories())
 
-@bp.route('/tours/<int:categoryid>/')
+@bp.route('/category/<int:categoryid>/')
 def products(categoryid):
     products = get_items_for_category(categoryid)
     return render_template('products.html', products = products, category= get_category(categoryid))
