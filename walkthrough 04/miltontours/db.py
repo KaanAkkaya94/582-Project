@@ -1,6 +1,6 @@
 
 from miltontours.models import Item, Category, Order, OrderStatus, UserInfo, City, Tour
-from miltontours.models import UserAccount
+from miltontours.models import UserAccount, Basket
 from datetime import datetime
 from . import mysql
 

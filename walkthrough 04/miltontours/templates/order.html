@@ -85,10 +85,7 @@
                     <input type="submit" value="Checkout" class="btn btn-success mb-3">
                 </form>
                 {% else %}
-                <a href="{{ url_for('main.index') }}">
-                    <button class="add_button brand_color_set mb-3">
-                        Continue Shopping
-                    </button></a>
+                    <a href="{{ url_for('main.index') }}" class="btn add_button brand_color_set">Continue Shopping</a>
                 {% endif %}
             </div>
         </div>

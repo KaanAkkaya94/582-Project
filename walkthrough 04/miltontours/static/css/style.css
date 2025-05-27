@@ -3,6 +3,10 @@ html{
     --alt-color: rgb(153, 206, 160);
 }
 
+body{
+    background-color: rgb(228, 229, 228);
+}
+
 .brand:hover {
     color: bisque;
 }
@@ -41,3 +45,4 @@ html{
     background-color: var(--alt-color);
     color: white;
 }
+
