@@ -34,17 +34,8 @@ class NewCheckoutForm(FlaskForm):
         ],
         validators=[InputRequired()],
     )
-    delivery = SelectField(
-        "Delivery method",
-        choices=[
-            ("Normal Delivery"),
-            ("Express Delivery"),
-            ("Eco Friendly Delivery"),
-            ("Store Pickup"),
-        ],
-        validators=[InputRequired()],
-    )
-    payment = SubmitField("Pay Now")
+
+    payment = SubmitField("Proceed to Checkout")
 
 
 class LoginForm(FlaskForm):
@@ -93,3 +84,29 @@ class RegisterForm(FlaskForm):
         validators=[InputRequired()],
     )
     submit = SubmitField('Register')
+
+
+class orderCheckout(FlaskForm):
+    """Form for user checkout."""
+    paymentType = SelectField(
+        "Select Payment Type",
+        choices=[
+            ("Debit/Credit"),
+            ("Paypal"),
+            ("Wise"),
+            ("Bank Transfer")
+           
+        ],
+        validators=[InputRequired()],
+    )
+    delivery = SelectField(
+        "Delivery method",
+        choices=[
+            ("Normal Delivery"),
+            ("Express Delivery"),
+            ("Eco Friendly Delivery"),
+            ("Store Pickup"),
+        ],
+        validators=[InputRequired()],
+    )
+    payment = SubmitField("Pay Now")

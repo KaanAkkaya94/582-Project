@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% import 'bootstrap5/form.html' as wtf %}
+
+{% block main %}
+<section class="shadow-sm mb-5 mt-5">  
+    <div class="container text-center">
+
+        <h1>Order Summary</h1>
+        <ul>
+            {% for item in basket.items %}
+            <li>{{ item.product.name }} (x{{ item.quantity }}) - ${{ "%.2f"|format(item.product.price * item.quantity) }}</li>
+            {% endfor %}
+        </ul>
+        <!-- total price  -->
+        <div class="lead-5 text-center mb-3">
+            TOTAL: {{ "$ %.2f"|format(totalprice) }}
+        </div>
+        <div class="row mt-4 justify-content-center p-3">
+            <div class="col-md-6">
+                {{ wtf.render_form(form) }}
+            </div>
+                
+        </div>
+        <form method="POST">
+    {{ form.hidden_tag() }}
+    </form>
+    </div>
+
+
+</section>
+{% endblock %}

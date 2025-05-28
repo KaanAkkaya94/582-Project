@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% import 'bootstrap5/form.html' as wtf %}
+
+{% block main %}
+<section class="shadow-sm mb-5 mt-5">  
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>SUCCESS !!!</h1>
+                <p>
+                    Thank you - your order has been placed successfully.
+                    <a href="{{ url_for('main.index') }}" class="btn text-end btn-primary">Continue to shop</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

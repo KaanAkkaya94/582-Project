@@ -22,7 +22,9 @@ def get_user():
 
 def get_basket():
     basket_data = session.get('basket')
-    basket = Basket()
+    user = get_user()
+    user_id = user.id if user else None
+    basket = Basket(user_id)
     if isinstance(basket_data, dict):
             for item in basket_data.get('items', []):
                 product_id = item.get('product', {}).get('id')

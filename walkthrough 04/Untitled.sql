@@ -106,6 +106,30 @@ create table users(
 );
 
 
+CREATE TABLE orders (
+    orderID INT AUTO_INCREMENT PRIMARY KEY,
+    userID int,
+    order_status ENUM('Pending', 'Confirmed', 'Cancelled') DEFAULT 'Confirmed',
+    order_delivery_type varchar(50) not null,
+    total_cost DECIMAL(10,2),
+    order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    userFirstName varchar(20) not null,
+    userLastName varchar(20) not null,
+    userEmail varchar(50) unique not null,
+    userPhoneNumber varchar(20) not null,
+    FOREIGN KEY (userID) REFERENCES users(userID) ON DELETE SET NULL
+);
+
+CREATE TABLE order_items (
+    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    orderID INT,
+    itemID INT,
+    quantity INT DEFAULT 1,
+    FOREIGN KEY (orderID) REFERENCES orders(orderID) ON DELETE CASCADE,
+    FOREIGN KEY (itemID) REFERENCES cities(itemID)
+);
+
+
 
 #changed basket(paymentOption) to paymentOptions(paymentoption)
 insert into  paymentOptions (paymentOption) values
@@ -120,3 +144,15 @@ insert into deliveryOptions (deliveryOption) values
 ('Express Delivery'),
 ('Eco-Friendly Delivery'),
 ('Store Pick-Up');
+
+-- Orders (linked to user)
+-- INSERT INTO orders (userID, order_status, total_cost, userFirstName, userLastName, userEmail, userPhoneNumber)
+-- VALUES
+-- (1, 'Pending', 149.99, 'Dummy', 'Foobar', 'dummy@foobar.com', '1234567890'),
+-- (1, 'Confirmed', 1000.00, 'Dummy', 'Foobar', 'dummy@foobar.com', '1234567890');
+
+-- Order items
+-- INSERT INTO order_items (orderID, itemID, quantity) VALUES
+-- (1, 1, 1),
+-- (1, 3, 1),
+-- (2, 2, 2);
