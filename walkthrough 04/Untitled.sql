@@ -110,6 +110,7 @@ CREATE TABLE orders (
     orderID INT AUTO_INCREMENT PRIMARY KEY,
     userID int,
     order_status ENUM('Pending', 'Confirmed', 'Cancelled') DEFAULT 'Confirmed',
+    order_delivery_type varchar(50) not null,
     total_cost DECIMAL(10,2),
     order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     userFirstName varchar(20) not null,
