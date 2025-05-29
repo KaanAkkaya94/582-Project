@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import SubmitField, StringField, PasswordField
+from wtforms.fields import SubmitField, StringField, PasswordField, RadioField, DecimalField
 from wtforms.validators import InputRequired, email, EqualTo
 from wtforms.fields import SelectField  # Add this import
 
@@ -110,3 +110,16 @@ class orderCheckout(FlaskForm):
         validators=[InputRequired()],
     )
     payment = SubmitField("Pay Now")
+
+class AddCategoryForm(FlaskForm):
+    """Form for adding a city."""
+    category_name = StringField("Category Name", validators = [InputRequired()])
+    category_submit = SubmitField("Add Category")
+
+class AddProductForm(FlaskForm):
+    """Form for adding a tour."""
+    product_category = RadioField("Category", choices = [], validators = [InputRequired()])
+    product_name = StringField("Product Name", validators = [InputRequired()])
+    product_description = StringField("Description", validators = [InputRequired()])
+    product_price = DecimalField("Price", validators = [InputRequired()])
+    product_submit = SubmitField("Add Product")

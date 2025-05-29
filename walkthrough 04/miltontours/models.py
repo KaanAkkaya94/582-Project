@@ -53,7 +53,6 @@ class Tour:
 class Category:
     id: str
     name: str
-    image: str = 'foobar.png'
 
 @dataclass
 class Item:
@@ -62,7 +61,6 @@ class Item:
     description: str
     category: Category
     price: float
-    image: str = 'foobar.png'
 
 
 class OrderStatus(Enum):

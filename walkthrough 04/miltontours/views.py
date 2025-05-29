@@ -5,10 +5,11 @@ from hashlib import sha256
 
 from miltontours.db import get_orders, check_for_user, add_user, user_already_exists
 
-from miltontours.db import get_categories, get_items_for_category, get_category, get_product, search_items, is_admin
+from miltontours.db import get_categories, get_items_for_category, get_category, get_product, search_items, is_admin, add_category, add_product
 
 from miltontours.session import get_basket, add_to_basket, remove_from_basket, empty_basket, convert_basket_to_order, _save_basket_to_session, get_user
-from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm, orderCheckout
+from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm, orderCheckout, AddCategoryForm, AddProductForm
+from miltontours.models import Category, Item
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import mysql
 
@@ -258,11 +259,42 @@ def manage():
         return redirect(url_for('main.index'))
     # now we know the user is logged in and is an admin
     # we can show the manage panel
-#     cityform = AddCityForm()
-#     tourform = AddTourForm()
-#     # we need to populate the cities in the tourform
-#     tourform.tour_city.choices = [(city.id, city.name) for city in get_cities()]
-    return render_template('manage.html')
+    categoryform = AddCategoryForm()
+    productform = AddProductForm()
+    # we need to populate the cities in the tourform
+    productform.product_category.choices = [(category.id, category.name) for category in get_categories()]
+    return render_template('manage.html', categoryform=categoryform, productform=productform)
+
+@bp.post('/manage/')
+def handle_manage():
+    categoryform = AddCategoryForm()
+    productform = AddProductForm()
+    productform.product_category.choices = [(category.id, category.name) for category in get_categories()]
+    try:
+        if categoryform.validate_on_submit():
+            # Add the new category to the database
+            category = Category(
+                id= 0,
+                name=categoryform.category_name.data,
+            )
+            add_category(category)
+            flash('Category added successfully!')
+        elif productform.validate_on_submit():
+            # Add the new product to the database
+            product = Item(
+                id=0,
+                name=productform.product_name.data,
+                description=productform.product_description.data,
+                price=float(productform.product_price.data),
+                category=get_category(productform.product_category.data)
+            )
+            add_product(product)
+            flash('Product added successfully!')
+        else:
+            flash('Failed to add category or product. Please check your input.')
+    except Exception as e:
+        flash(f'An error occurred: {e}', 'error')
+    return redirect(url_for('main.index'))
 
 @bp.post('/basket/update_quantity/<string:item_id>/<string:action>/')
 def update_quantity(item_id, action):
