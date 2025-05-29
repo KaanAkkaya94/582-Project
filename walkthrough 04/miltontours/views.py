@@ -5,7 +5,7 @@ from hashlib import sha256
 
 from miltontours.db import get_orders, check_for_user, add_user, user_already_exists
 
-from miltontours.db import get_categories, get_items_for_category, get_category, get_product, search_items
+from miltontours.db import get_categories, get_items_for_category, get_category, get_product, search_items, is_admin
 
 from miltontours.session import get_basket, add_to_basket, remove_from_basket, empty_basket, convert_basket_to_order, _save_basket_to_session, get_user
 from miltontours.forms import NewCheckoutForm, LoginForm, RegisterForm, orderCheckout
@@ -219,7 +219,15 @@ def login():
                 flash('Invalid username or password', 'error')
                 return redirect(url_for('main.login'))
 
-            session['username']=user.username
+            session['user'] = {
+                            'user_id': user.info.id,
+                            'firstname': user.info.firstname,
+                            'surname': user.info.surname,
+                            'email': user.info.email,
+                            'phone': user.info.phone,
+                            'is_admin': is_admin(user.info.id),
+            }
+            session['username'] = user.username
             #session['userpassword']=user.userpassword
 
             session['logged_in'] = True
@@ -231,6 +239,7 @@ def login():
 
 @bp.route('/logout/')
 def logout():
+    session.clear()
     session.pop('username', None)
     session.pop('logged_in', None)
     flash('You have been logged out.')
@@ -249,11 +258,11 @@ def manage():
         return redirect(url_for('main.index'))
     # now we know the user is logged in and is an admin
     # we can show the manage panel
-    cityform = AddCityForm()
-    tourform = AddTourForm()
-    # we need to populate the cities in the tourform
-    tourform.tour_city.choices = [(city.id, city.name) for city in get_cities()]
-    return render_template('manage.html', cityform=cityform, tourform=tourform)
+#     cityform = AddCityForm()
+#     tourform = AddTourForm()
+#     # we need to populate the cities in the tourform
+#     tourform.tour_city.choices = [(city.id, city.name) for city in get_cities()]
+    return render_template('manage.html')
 
 @bp.post('/basket/update_quantity/<string:item_id>/<string:action>/')
 def update_quantity(item_id, action):
