@@ -1,0 +1,43 @@
+html{
+    --main-color: rgb(86, 158, 120);
+    --alt-color: rgb(153, 206, 160);
+}
+
+.brand:hover {
+    color: bisque;
+}
+
+
+.brand_color_set {
+    background-color: var(--main-color);
+    color: white;
+    font-style:normal;
+    text-decoration: none;
+}
+
+.prod_card{
+    background-color: white;
+    color: white;
+    width: 250px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
+.btn-outline-white {
+    border: 1px solid white;
+    color: white;
+}
+.btn:hover {
+    background-color: white;
+    color: black;
+}
+
+.btn {
+    color: white;
+}
+
+.add_button:hover {
+    background-color: var(--alt-color);
+    color: white;
+}
