@@ -281,3 +281,19 @@ def user_already_exists(username, useremail):
     row = cur.fetchone()
     cur.close()
     return True if row else False
+
+def add_category(category):
+    cur = mysql.connection.cursor()
+    cur.execute("INSERT INTO categories (categoryName) VALUES (%s)",
+                (category.name, ))
+    mysql.connection.commit()
+    cur.close()
+
+def add_product(product):
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        INSERT INTO cities (itemCategory, itemName, itemDescription, , itemPrice)
+        VALUES (%s, %s, %s, %s)
+    """, (int(product.category.id), product.name, product.description, float(product.price) ))
+    mysql.connection.commit()
+    cur.close()

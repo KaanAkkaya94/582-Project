@@ -105,6 +105,13 @@ create table users(
     foreign key (basketID) references basket(basketID)
 );
 
+create table admins(
+	userID int auto_increment not null primary key
+);
+
+insert into admins (userID) values
+(1),
+(2);
 
 CREATE TABLE orders (
     orderID INT AUTO_INCREMENT PRIMARY KEY,

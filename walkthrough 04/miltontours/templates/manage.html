@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% import 'bootstrap5/form.html' as wtf %}
+
+{% block head %}
+<h1 class="display-5 text-center mt-3 mb-3">Manage  Data</h1>
+<p class="lead text-center">
+    These forms are for adding new categories and products for users to book.
+</p>
+{% endblock %}
+
+{% block main %}
+
+    <div class="accordion" id="accordionBasic">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Add Category
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionBasic">
+                <div class="accordion-body">
+                    <h2>Add a new category to the database.</h2>
+                    {{ wtf.render_form(categoryform) }}
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Add Product
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionBasic">
+                <div class="accordion-body">
+                    <h2>Add a new product to the database.</h2>
+                    {{ wtf.render_form(productform) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
