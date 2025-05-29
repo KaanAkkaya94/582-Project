@@ -160,9 +160,9 @@ def order_summary():
         # Insert order into database
         cur = mysql.connection.cursor()
         cur.execute("""
-            INSERT INTO orders (userID, order_status, total_cost, userFirstName, userLastName, userEmail, userPhoneNumber)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """, (basket.userID, 'Confirmed', basket.total_cost(), order_info['firstname'], order_info['surname'], order_info['email'], order_info['phone']))
+            INSERT INTO orders (userID, order_status, order_delivery_type, total_cost, userFirstName, userLastName, userEmail, userPhoneNumber)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, (basket.userID, 'Confirmed', form.delivery.data, basket.total_cost(), order_info['firstname'], order_info['surname'], order_info['email'], order_info['phone']))
         order_id = cur.lastrowid
 
 
